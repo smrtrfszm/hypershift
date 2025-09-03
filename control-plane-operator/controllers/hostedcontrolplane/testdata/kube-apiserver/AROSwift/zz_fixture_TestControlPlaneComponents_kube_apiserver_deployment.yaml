@@ -441,6 +441,22 @@ spec:
             name: system:hosted-cluster-config
           EOF
 
+          touch /tmp/manifests/00_kas-bootstrap-container-rolebinding.yaml
+          cat <<EOF >/tmp/manifests/00_kas-bootstrap-container-rolebinding.yaml
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: kas-bootstrap-container-cluster-admin
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - apiGroup: rbac.authorization.k8s.io
+            kind: User
+            name: system:kas-bootstrap-container
+          EOF
+
           /usr/bin/render \
              --asset-output-dir /tmp/output \
              --rendered-manifest-dir=/tmp/manifests \
